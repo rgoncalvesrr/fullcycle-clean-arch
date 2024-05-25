@@ -7,8 +7,8 @@ import (
 )
 
 func TestNewUser(t *testing.T) {
-	expectedName := "Ricardo"
-	expectedEMail := "ricardo@goncalves.biz"
+	expectedName := "Usuario X"
+	expectedEMail := "usuario@dominio.com"
 	expectedPassword := "123456"
 
 	u, e := NewUser(expectedName, expectedEMail, expectedPassword)
@@ -22,8 +22,8 @@ func TestNewUser(t *testing.T) {
 }
 
 func TestUser_ValidatePassword(t *testing.T) {
-	expectedName := "Ricardo"
-	expectedEMail := "ricardo@goncalves.biz"
+	expectedName := "Usuario X"
+	expectedEMail := "usuario@dominio.com"
 	expectedPassword := "123456"
 
 	u, e := NewUser(expectedName, expectedEMail, expectedPassword)
