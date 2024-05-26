@@ -33,7 +33,7 @@ func TestCreateUser(t *testing.T) {
 }
 
 func TestFindByEmailUser(t *testing.T) {
-	db, err := gorm.Open(sqlite.Open("teste.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
 	if err != nil {
 		t.Error(err)
 		return
