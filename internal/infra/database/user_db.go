@@ -5,19 +5,19 @@ import (
 	"gorm.io/gorm"
 )
 
-type UserRepository struct {
+type UserGateway struct {
 	DB *gorm.DB
 }
 
-func NewUser(db *gorm.DB) *UserRepository {
-	return &UserRepository{DB: db}
+func NewUser(db *gorm.DB) *UserGateway {
+	return &UserGateway{DB: db}
 }
 
-func (u *UserRepository) Create(user *entity.User) error {
+func (u *UserGateway) Create(user *entity.User) error {
 	return u.DB.Create(user).Error
 }
 
-func (u *UserRepository) FindByEmail(email string) (*entity.User, error) {
+func (u *UserGateway) FindByEmail(email string) (*entity.User, error) {
 	var user *entity.User
 
 	err := u.DB.Where("e_mail = ?", email).First(&user).Error
