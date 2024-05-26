@@ -9,7 +9,7 @@ type UserGateway struct {
 	DB *gorm.DB
 }
 
-func NewUser(db *gorm.DB) *UserGateway {
+func NewUserGateway(db *gorm.DB) *UserGateway {
 	return &UserGateway{DB: db}
 }
 
