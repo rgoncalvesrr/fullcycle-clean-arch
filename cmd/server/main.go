@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"github.com/rgoncalvesrr/fullcycle-clean-arch/configs"
 	"github.com/rgoncalvesrr/fullcycle-clean-arch/internal/entity"
 	"github.com/rgoncalvesrr/fullcycle-clean-arch/internal/infra/database"
@@ -26,6 +28,12 @@ func main() {
 	productGateway := database.NewProductGateway(db)
 	productHandler := handlers.NewProductHandler(productGateway)
 
-	http.HandleFunc("/products", productHandler.CreateProduct)
-	http.ListenAndServe(fmt.Sprintf(":%s", cfg.WebServerPort), nil)
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
+
+	r.Get("/products/{id}", productHandler.GetProduct)
+	r.Post("/products", productHandler.CreateProduct)
+	r.Patch("/products/{id}", productHandler.UpdateProduct)
+
+	http.ListenAndServe(fmt.Sprintf(":%s", cfg.WebServerPort), r)
 }
