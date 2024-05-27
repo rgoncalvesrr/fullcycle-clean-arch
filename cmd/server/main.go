@@ -29,6 +29,7 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
+	r.Get("/products", productHandler.GetProducts)
 	r.Get("/products/{id}", productHandler.GetProduct)
 	r.Post("/products", productHandler.CreateProduct)
 	r.Patch("/products/{id}", productHandler.UpdateProduct)
