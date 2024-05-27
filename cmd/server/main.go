@@ -17,8 +17,6 @@ import (
 func main() {
 	cfg := configs.LoadConfig(".")
 
-	fmt.Println(cfg.JWTSecret)
-
 	db, err := gorm.Open(sqlite.Open("teste.db"), &gorm.Config{})
 	if err != nil {
 		panic(err)
@@ -34,6 +32,7 @@ func main() {
 	r.Get("/products/{id}", productHandler.GetProduct)
 	r.Post("/products", productHandler.CreateProduct)
 	r.Patch("/products/{id}", productHandler.UpdateProduct)
+	r.Delete("/products/{id}", productHandler.DeleteProduct)
 
 	http.ListenAndServe(fmt.Sprintf(":%s", cfg.WebServerPort), r)
 }
