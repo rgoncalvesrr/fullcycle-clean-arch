@@ -26,13 +26,13 @@ func (p *ProductGateway) FindAll(offset, limit int, sort string) ([]entity.Produ
 		offset = 0
 	}
 
-	if limit < 0 || limit > 50 {
+	if limit <= 0 || limit > 50 {
 		limit = 50
 	}
 
 	var products []entity.Product
 
-	err := p.DB.Limit(limit).Offset(offset).Order("id " + sort).Find(&products).Error
+	err := p.DB.Limit(limit).Offset(offset).Order("created_at " + sort).Find(&products).Error
 
 	if err != nil {
 		products = nil

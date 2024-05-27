@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func TestCreateUser(t *testing.T) {
+func TestUserCreate(t *testing.T) {
 	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
 	if err != nil {
 		t.Error(err)
@@ -32,7 +32,7 @@ func TestCreateUser(t *testing.T) {
 	assert.NotEmpty(t, userFound.Password)
 }
 
-func TestFindByEmailUser(t *testing.T) {
+func TestUserFindByEmail(t *testing.T) {
 	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
 	if err != nil {
 		t.Error(err)
