@@ -25,24 +25,41 @@ func NewUserHandler(db database.UserInterface, jwt *jwtauth.JWTAuth, jwtExpiresI
 	}
 }
 
+// Create user godoc
+//
+//	@Summay			Get a user JWT
+//	@Description	Get a user JWT
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//
+//	@Param			request	body		dto.GetJWTInput	true	"user credentials"
+//	@Success		201		{object}	dto.GetJWTOutput
+//	@Failure		404		{object}	dto.Error
+//	@Failure		401		{object}	dto.Error
+//	@Failure		500		{object}	dto.Error
+//	@Router			/users/auth [post]
 func (h *UserHandler) GetJWT(w http.ResponseWriter, r *http.Request) {
 	var userDto dto.GetJWTInput
 	err := json.NewDecoder(r.Body).Decode(&userDto)
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(&dto.Error{Message: err.Error()})
 		return
 	}
 
 	u, err := h.UserGateway.FindByEmail(userDto.Email)
 
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(&dto.Error{Message: err.Error()})
 		return
 	}
 
 	if !u.ValidatePassword(userDto.Password) {
 		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(&dto.Error{Message: "Acesso não autorizado"})
 		return
 	}
 
@@ -51,17 +68,11 @@ func (h *UserHandler) GetJWT(w http.ResponseWriter, r *http.Request) {
 		"exp": time.Now().Add(time.Second * time.Duration(h.JwtExpiresIn)).Unix(),
 	})
 
-	accessToken := struct {
-		AccessToken string `json:"access_token"`
-	}{
-		AccessToken: token,
-	}
+	accessToken := dto.GetJWTOutput{AccessToken: token}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(&accessToken)
-	// token := jwtauth.New("HS256", []byte("secret"), nil)
-
 }
 
 // Create user godoc

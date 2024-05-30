@@ -14,6 +14,18 @@ definitions:
       message:
         type: string
     type: object
+  dto.GetJWTInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  dto.GetJWTOutput:
+    properties:
+      access_token:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -42,6 +54,39 @@ paths:
       responses:
         "201":
           description: Created
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Error'
+      tags:
+      - users
+  /users/auth:
+    post:
+      consumes:
+      - application/json
+      description: Get a user JWT
+      parameters:
+      - description: user credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GetJWTInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.GetJWTOutput'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.Error'
         "500":
           description: Internal Server Error
           schema:
