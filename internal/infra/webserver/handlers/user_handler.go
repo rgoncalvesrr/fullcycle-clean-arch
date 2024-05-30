@@ -82,6 +82,7 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(&dto.Error{Message: err.Error()})
 		return
 	}
 
@@ -89,12 +90,14 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(&dto.Error{Message: err.Error()})
 		return
 	}
 
 	err = h.UserGateway.Create(p)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(&dto.Error{Message: err.Error()})
 		return
 	}
 
