@@ -9,13 +9,29 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/jwtauth"
 	"github.com/rgoncalvesrr/fullcycle-clean-arch/configs"
+	_ "github.com/rgoncalvesrr/fullcycle-clean-arch/docs"
 	"github.com/rgoncalvesrr/fullcycle-clean-arch/internal/entity"
 	"github.com/rgoncalvesrr/fullcycle-clean-arch/internal/infra/database"
 	"github.com/rgoncalvesrr/fullcycle-clean-arch/internal/infra/webserver/handlers"
+	httpSwagger "github.com/swaggo/http-swagger/v2"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
+//	@title			Go Expert API Example
+//	@version		1.0
+//	@description	Product API with authentication
+//	@termsOfService	https://swagger.io/terms/
+
+//	@contact.name	Ricardo Gonçalves
+//	@contact.url	https://goncalves.biz
+//	@contact.email	ricardo@goncalves.biz
+
+// @host						localhost:8080
+// @BasePath					/
+// @securityDefinitions.apikey	ApiKeyAuth
+// @in							header
+// @name						Authorization
 func main() {
 	cfg := configs.LoadConfig(".")
 
@@ -48,6 +64,10 @@ func main() {
 
 	r.Post("/users", userHandler.CreateUser)
 	r.Post("/users/auth", userHandler.GetJWT)
+
+	// r.Route("", func(r chi.Router) {
+	r.Get("/docs/*", httpSwagger.Handler(httpSwagger.URL(fmt.Sprintf("http://localhost:%s/docs/doc.json", cfg.WebServerPort))))
+	// })
 
 	http.ListenAndServe(fmt.Sprintf(":%s", cfg.WebServerPort), r)
 }
