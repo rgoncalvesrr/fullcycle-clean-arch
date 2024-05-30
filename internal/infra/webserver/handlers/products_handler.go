@@ -21,12 +21,27 @@ func NewProductHandler(db database.ProductInterface) *ProductHandler {
 	}
 }
 
+// Create Product godoc
+//
+//	@Summay			Create Product
+//	@Description	Create Product
+//	@Tags			products
+//	@Accept			json
+//	@Produce		json
+//
+//	@Param			request	body		dto.CreateProductInput	true	"product request"
+//	@Success		201		{object}	dto.CreateProductOutput
+//	@Failure		500		{object}	dto.Error
+//	@Router			/products [post]
+//
+//	@Security		ApiKeyAuth
 func (h *ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	var productDto dto.CreateProductInput
 	err := json.NewDecoder(r.Body).Decode(&productDto)
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(&dto.Error{Message: err.Error()})
 		return
 	}
 
@@ -34,12 +49,14 @@ func (h *ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(&dto.Error{Message: err.Error()})
 		return
 	}
 
 	err = h.ProductGateway.Create(p)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(&dto.Error{Message: err.Error()})
 		return
 	}
 
@@ -134,6 +151,23 @@ func (h *ProductHandler) DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
+// List Product godoc
+//
+//	@Summay			List Products
+//	@Description	List Products
+//	@Tags			products
+//	@Accept			json
+//	@Produce		json
+//
+//	@Param			page	query		string	false	"page number"
+//	@Param			limit	query		string	false	"limit"
+//	@Param			sort	query		string	false	"order type"
+//	@Success		200		{array}		entity.Product
+//	@Success		204
+//	@Failure		500		{object}	dto.Error
+//	@Router			/products [get]
+//
+//	@Security		ApiKeyAuth
 func (h *ProductHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
 	page := r.URL.Query().Get("page")
 	limit := r.URL.Query().Get("limit")
@@ -155,6 +189,7 @@ func (h *ProductHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(&dto.Error{Message: err.Error()})
 		return
 	}
 
