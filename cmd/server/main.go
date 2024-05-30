@@ -26,6 +26,9 @@ func main() {
 	productGateway := database.NewProductGateway(db)
 	productHandler := handlers.NewProductHandler(productGateway)
 
+	userGateway := database.NewUserGateway(db)
+	userHandler := handlers.NewUserHandler(userGateway, cfg.TokenAuth, cfg.JWTExpiresIn)
+
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
@@ -34,6 +37,9 @@ func main() {
 	r.Post("/products", productHandler.CreateProduct)
 	r.Patch("/products/{id}", productHandler.UpdateProduct)
 	r.Delete("/products/{id}", productHandler.DeleteProduct)
+
+	r.Post("/users", userHandler.CreateUser)
+	r.Post("/users/auth", userHandler.GetJWT)
 
 	http.ListenAndServe(fmt.Sprintf(":%s", cfg.WebServerPort), r)
 }
