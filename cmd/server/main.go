@@ -32,11 +32,13 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
-	r.Get("/products", productHandler.GetProducts)
-	r.Get("/products/{id}", productHandler.GetProduct)
-	r.Post("/products", productHandler.CreateProduct)
-	r.Patch("/products/{id}", productHandler.UpdateProduct)
-	r.Delete("/products/{id}", productHandler.DeleteProduct)
+	r.Route("/products", func(r chi.Router) {
+		r.Get("/", productHandler.GetProducts)
+		r.Get("/{id}", productHandler.GetProduct)
+		r.Post("/", productHandler.CreateProduct)
+		r.Patch("/{id}", productHandler.UpdateProduct)
+		r.Delete("/{id}", productHandler.DeleteProduct)
+	})
 
 	r.Post("/users", userHandler.CreateUser)
 	r.Post("/users/auth", userHandler.GetJWT)
