@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -31,6 +32,7 @@ func main() {
 	userHandler := handlers.NewUserHandler(userGateway, cfg.TokenAuth, cfg.JWTExpiresIn)
 
 	r := chi.NewRouter()
+	r.Use(LogRequest)
 	r.Use(middleware.Logger)
 
 	r.Route("/products", func(r chi.Router) {
@@ -47,4 +49,12 @@ func main() {
 	r.Post("/users/auth", userHandler.GetJWT)
 
 	http.ListenAndServe(fmt.Sprintf(":%s", cfg.WebServerPort), r)
+}
+
+func LogRequest(next http.Handler) http.Handler {
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Println(r.Method, " - ", r.URL.Path)
+		next.ServeHTTP(w, r)
+	})
 }
