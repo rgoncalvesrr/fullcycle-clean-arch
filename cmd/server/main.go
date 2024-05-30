@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/jwtauth"
 	"github.com/rgoncalvesrr/fullcycle-clean-arch/configs"
 	"github.com/rgoncalvesrr/fullcycle-clean-arch/internal/entity"
 	"github.com/rgoncalvesrr/fullcycle-clean-arch/internal/infra/database"
@@ -33,6 +34,8 @@ func main() {
 	r.Use(middleware.Logger)
 
 	r.Route("/products", func(r chi.Router) {
+		r.Use(jwtauth.Verifier(cfg.TokenAuth)) // verificação do token JWT
+		r.Use(jwtauth.Authenticator)           // validação do token
 		r.Get("/", productHandler.GetProducts)
 		r.Get("/{id}", productHandler.GetProduct)
 		r.Post("/", productHandler.CreateProduct)
