@@ -34,6 +34,7 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(LogRequest)
 	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
 
 	r.Route("/products", func(r chi.Router) {
 		r.Use(jwtauth.Verifier(cfg.TokenAuth)) // verificação do token JWT
