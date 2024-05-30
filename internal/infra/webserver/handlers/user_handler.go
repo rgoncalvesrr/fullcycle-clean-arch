@@ -64,6 +64,18 @@ func (h *UserHandler) GetJWT(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// Create user godoc
+//
+//	@Summay			Create User
+//	@Description	Create User
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//
+//	@Param			request	body	dto.CreateUserInput	true	"user request"
+//	@Success		201
+//	@Failure		500	{object}	dto.Error
+//	@Router			/users [post]
 func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var userDto dto.CreateUserInput
 	err := json.NewDecoder(r.Body).Decode(&userDto)

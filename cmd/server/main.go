@@ -48,7 +48,7 @@ func main() {
 	userHandler := handlers.NewUserHandler(userGateway, cfg.TokenAuth, cfg.JWTExpiresIn)
 
 	r := chi.NewRouter()
-	r.Use(LogRequest)
+	// r.Use(LogRequest)
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
